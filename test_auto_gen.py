@@ -1,9 +1,10 @@
 from SimplicialComplex import *
 import random
 
+path = 'data/'
 mesh_name = 'circle.obj'
 output_file_name = 'test_code.cpp'
-mesh = load_obj(mesh_name)
+mesh = load_obj(path+mesh_name)
 n_samples = 5
 v_samples = random.sample(list(mesh.vertices), n_samples)
 
