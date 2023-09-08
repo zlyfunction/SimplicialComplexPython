@@ -87,7 +87,7 @@ def print_sc(sc):
     print("#edges: ", len([item for item in sc if len(item) == 2]))
     print("#triangles: ", len([item for item in sc if len(item) == 3]))
     print("#tets: ", len([item for item in sc if len(item) == 4]))
-    sorted_lst = sorted(sc, key=lambda x: (len(x),x[0]))
+    sorted_lst = sorted(sc, key=lambda x: (len(x),x))
     for item in sorted_lst:
         print(item)
 
