@@ -8,8 +8,8 @@ class Mesh:
         self.n_vertices = 0
 
     def add_vertex(self):
-        self.n_vertices += 1
         self.vertices.append((self.n_vertices,))
+        self.n_vertices += 1
 
     def add_face(self, f):
         self.faces.add(tuple(sorted(f)))
@@ -75,9 +75,11 @@ def load_obj(filename):
                 mesh.add_vertex()
             elif tokens[0] == "f":
                 if len(tokens[1:]) == 3:
-                    mesh.add_face(tuple(map(int, tokens[1:])))
+                    face = tuple(map(int, tokens[1:]))
+                    mesh.add_face(tuple(x - 1 for x in face))
                 elif len(tokens[1:]) == 4:
-                    mesh.add_tetrahedron(tuple(map(int, tokens[1:])))
+                    tet = tuple(map(int, tokens[1:]))
+                    mesh.add_tetrahedron(tuple(x - 1 for x in tet))
     return mesh
 
 def print_sc(sc):
