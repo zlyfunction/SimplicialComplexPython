@@ -1,4 +1,6 @@
 from itertools import chain, combinations
+import igl
+import numpy as np
 class Mesh:
     def __init__(self):
         self.vertices = []    # List of vertices
@@ -66,20 +68,31 @@ class Mesh:
     def link(self, simplex):
         return list(set(self.anti_star(simplex)) & set(self.closed_star(simplex)))
 
+# def load_obj(filename):
+#     mesh = Mesh()
+#     with open(filename, 'r') as f:
+#         for line in f:
+#             tokens = line.strip().split()
+#             if tokens[0] == "v":
+#                 mesh.add_vertex()
+#             elif tokens[0] == "f":
+#                 if len(tokens[1:]) == 3:
+#                     face = tuple(map(int, tokens[1:]))
+#                     mesh.add_face(tuple(x - 1 for x in face))
+#                 elif len(tokens[1:]) == 4:
+#                     tet = tuple(map(int, tokens[1:]))
+#                     mesh.add_tetrahedron(tuple(x - 1 for x in tet))
+#     return mesh
 def load_obj(filename):
     mesh = Mesh()
-    with open(filename, 'r') as f:
-        for line in f:
-            tokens = line.strip().split()
-            if tokens[0] == "v":
-                mesh.add_vertex()
-            elif tokens[0] == "f":
-                if len(tokens[1:]) == 3:
-                    face = tuple(map(int, tokens[1:]))
-                    mesh.add_face(tuple(x - 1 for x in face))
-                elif len(tokens[1:]) == 4:
-                    tet = tuple(map(int, tokens[1:]))
-                    mesh.add_tetrahedron(tuple(x - 1 for x in tet))
+    v, _, _, f, _, _ = igl.read_obj(filename)
+    for i in range(v.shape[0]):
+        mesh.add_vertex()
+    for i in range(f.shape[0]):
+        if (f[i,:].shape[0] == 3):
+            mesh.add_face(tuple(f[i,:]))
+        elif (f[i,:].shape[0] == 4):
+            mesh.add_tetrahedron(tuple(f[i,:]))
     return mesh
 
 def print_sc(sc):
