@@ -5,7 +5,7 @@ import random
 path = 'data/'
 mesh_name = 'circle.obj'
 output_file_name = 'test_code.cpp'
-test_function_name = 'link'
+test_function_name = 'link' # 'open_star', 'closed_star', 'link'
 mesh = load_obj(path+mesh_name)
 
 # Choose test function
@@ -40,7 +40,7 @@ with open(output_file_name, 'w') as file:
     '    m.initialize(F);\n'+\
     '\n'+\
     '    Tuple t;\n'+\
-    '    std::vector<std::vector<long>> sc_v;\n'
+    '    std::vector<std::vector<long>> sc_v, sc_e, sc_f;\n'
     
     file.write(cpp_code)
 
@@ -54,6 +54,30 @@ with open(output_file_name, 'w') as file:
         for simplex in sc:
             for i in range(len(simplex)):
                 file.write("    CHECK(sc_v[{}][{}] == {});\n".format(sc.index(simplex), i, simplex[i]))
+        file.write("\n")
+    
+    # print(e_samples)
+    for e in e_samples:
+        file.write("    t = m.edge_tuple_from_vids({},{});\n".format(e[0], e[1]))
+        file.write("    sc_e = get_sorted_sc(m, SimplicialComplex::{test_func}(m, Simplex(PE, t)).get_simplex_vector());\n".format(test_func = test_function_name))
+        sc = test_function(e)
+        sc = sorted(sc, key=lambda x: (len(x),x))
+        file.write("    REQUIRE(sc_e.size() == {});\n".format(len(sc)))
+        for simplex in sc:
+            for i in range(len(simplex)):
+                file.write("    CHECK(sc_e[{}][{}] == {});\n".format(sc.index(simplex), i, simplex[i]))
+        file.write("\n")
+
+    # print(f_samples)
+    for f in f_samples:
+        file.write("    t = m.face_tuple_from_vids({}, {}, {});\n".format(f[0], f[1], f[2]))
+        file.write("    sc_f = get_sorted_sc(m, SimplicialComplex::{test_func}(m, Simplex(PF, t)).get_simplex_vector());\n".format(test_func = test_function_name))
+        sc = test_function(f)
+        sc = sorted(sc, key=lambda x: (len(x),x))
+        file.write("    REQUIRE(sc_f.size() == {});\n".format(len(sc)))
+        for simplex in sc:
+            for i in range(len(simplex)):
+                file.write("    CHECK(sc_f[{}][{}] == {});\n".format(sc.index(simplex), i, simplex[i]))
         file.write("\n")
     
     file.write("}\n")
