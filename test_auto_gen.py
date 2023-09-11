@@ -42,7 +42,7 @@ def write_tests(file, path_to_data, mesh_name, n_samples, test_function_names):
     f_samples = random.sample(list(mesh.faces), n_samples)
 
     # also sample some simplex on the boudnary of the mesh
-    v, _, _, f, _, _ = igl.read_obj('data/circle.obj')
+    v, _, _, f, _, _ = igl.read_obj(path_to_data + mesh_name)
     bd_loop = igl.boundary_loop(f)
     if len(bd_loop) > 0:
         n_bd_samples = min(n_samples, len(bd_loop))
@@ -113,10 +113,10 @@ def write_tests(file, path_to_data, mesh_name, n_samples, test_function_names):
 
 # Parameters
 path = 'data/'
-mesh_names = ['circle.obj']#, 'bunny.obj', 'Octocat.obj']
+mesh_names = ['circle.obj', 'bunny.obj', 'Octocat.obj']
 output_file_name = 'test_simplicial_complex_2d.cpp'
 test_function_names = ['open_star', 'closed_star', 'link', 'simplex_with_boundary', 'top_coface_simplex']
-n_samples = 5
+n_samples = 3
 
 # Write test code
 with open(output_file_name, 'w') as file:
