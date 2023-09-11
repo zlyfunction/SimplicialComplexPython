@@ -5,7 +5,7 @@ import random
 path = 'data/'
 mesh_name = 'circle.obj'
 output_file_name = 'test_code.cpp'
-test_function_name = 'simplex_with_boundary' # 'open_star', 'closed_star', 'link'
+test_function_name = 'top_coface_simplex' # 'open_star', 'closed_star', 'link', 'simplex_with_boundary', 'top_coface_simplex'
 mesh = load_obj(path+mesh_name)
 
 # Choose test function
@@ -17,6 +17,8 @@ elif test_function_name == 'link':
     test_function = mesh.link
 elif test_function_name == "simplex_with_boundary":
     test_function = mesh.boundary
+elif test_function_name == "top_coface_simplex":
+    test_function = mesh.top_coface_simplex
 else:
     raise Exception("Function name not recognized")
 
