@@ -68,6 +68,12 @@ class Mesh:
     def link(self, simplex):
         return list(set(self.anti_star(simplex)) & set(self.closed_star(simplex)))
 
+    def top_coface_simplex(self, simplex):
+        if len(self.tetrahedra) > 0:
+            return self.coface_tetrahedra(simplex)
+        else:
+            return self.coface_faces(simplex)
+    
 # def load_obj(filename):
 #     mesh = Mesh()
 #     with open(filename, 'r') as f:
