@@ -50,7 +50,7 @@ def write_tests(file, path_to_data, mesh_name, n_samples, test_function_names):
         for _ in range(n_bd_samples):
             index = random.choice(indices)  # Choose a random index
             v_samples.append((bd_loop[index],))
-            e_samples.append((bd_loop[index], bd_loop[(index + 1) % len(bd_loop)]))
+            e_samples.append(tuple(sorted([bd_loop[index], bd_loop[(index + 1) % len(bd_loop)]])))
             indices.remove(index)  # Remove the chosen index to prevent duplicates
     
     for test_function_name in test_function_names:
@@ -113,7 +113,7 @@ def write_tests(file, path_to_data, mesh_name, n_samples, test_function_names):
 
 # Parameters
 path = 'data/'
-mesh_names = ['circle.obj', 'bunny.obj', 'Octocat.obj']
+mesh_names = ['circle.obj']#, 'bunny.obj', 'Octocat.obj']
 output_file_name = 'test_simplicial_complex_2d.cpp'
 test_function_names = ['open_star', 'closed_star', 'link', 'simplex_with_boundary', 'top_coface_simplex']
 n_samples = 5
