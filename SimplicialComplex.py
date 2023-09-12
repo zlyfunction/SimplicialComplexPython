@@ -1,5 +1,6 @@
 from itertools import chain, combinations
 import igl
+import meshio
 import numpy as np
 class Mesh:
     def __init__(self):
@@ -41,6 +42,12 @@ class Mesh:
 
     def coface_edges(self, simplex):
         return [e for e in self.edges if set(simplex).issubset(set(e))]
+
+    def top_coface_simplex(self, simplex):
+        if len(self.tetrahedra) > 0:
+            return self.coface_tetrahedra(simplex)
+        else:
+            return self.coface_faces(simplex)
     
     def open_star(self, simplex):
         simplex = tuple(sorted(simplex))
@@ -93,6 +100,15 @@ def load_obj(filename):
             mesh.add_face(tuple(f[i,:]))
         elif (f[i,:].shape[0] == 4):
             mesh.add_tetrahedron(tuple(f[i,:]))
+    return mesh
+
+def load_msh(filename):
+    mesh = Mesh()
+    v, t = igl.read_msh(filename)
+    for i in range(v.shape[0]):
+        mesh.add_vertex()
+    for i in range(t.shape[0]):
+        mesh.add_tetrahedron(tuple(t[i,:]))
     return mesh
 
 def print_sc(sc):
